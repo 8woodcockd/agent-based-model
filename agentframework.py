@@ -39,7 +39,6 @@ class Agent:
     
     def move(self, rows, cols):
     # change coordinates of x and y (random half chance of increasing by 1 or decreasing by 1)
-        print(self.x, self.y, rows, cols)
         if random.random() < 0.5:
             self.y = (self.y + 1) % rows # using modulus to implement torus boundary
         else:
