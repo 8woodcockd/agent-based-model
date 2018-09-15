@@ -17,13 +17,17 @@ import sys
 
 # Enter model variables to be used. These will be overidden by any variables 
 # entered at the command prompt if available.
-num_of_agents = 10
-num_of_iterations = 100
+num_of_agents = 2
+num_of_iterations = 25
 neighbourhood = 10
-animation_frame_interval = 2
+animation_frame_interval = 5
 store_capacity = 100
-consumption_rate = 10
+consumption_rate = 24
+move_cost = 12
+env_growth_rate = .1
+completed_frames = 0
 completed_iterations = 0
+carry_on = True
                                                                               
 # Arguments entered via the command line will overide the script defaults 
 # and be used if available
@@ -62,21 +66,22 @@ elif 1 < len(sys.argv) < 5:
 
 def results():
     #plot the final results if the last frame is not showing the result of the final iteration
-    if num_of_iterations % animation_frame_interval != 0:
-        '''Move the agents and make them eat in a new randomised order for each iteration.'''
-        fig.clear()
-        for j in range(num_of_iterations % animation_frame_interval):
-            rand_order = list(range(num_of_agents))
-            random.shuffle(rand_order)
-            for i in rand_order:
-                agents[i].move(rows, cols)
-            for i in rand_order:
-                agents[i].eat(store_capacity, consumption_rate)
-            for i in rand_order:
-                agents[i].share_with_neighbours(neighbourhood)
+    if carry_on is True:
+        if num_of_iterations % animation_frame_interval != 0:
+            '''Move the agents and make them eat in a new randomised order for each iteration.'''
+            for j in range(num_of_iterations % animation_frame_interval):
+                rand_order = list(range(num_of_agents))
+                random.shuffle(rand_order)
+                for i in rand_order:
+                    agents[i].move(rows, cols, move_cost)
+                for i in rand_order:
+                    agents[i].eat(store_capacity, consumption_rate)
+                for i in rand_order:
+                    agents[i].share_with_neighbours(neighbourhood)
             
             #calculate extremeties (E, S, W, N) using extremes function defined in  
     #agentframework.py'''
+    fig.clear()
     extremeties = agents[0].extremes(num_of_agents)
     matplotlib.pyplot.imshow(environment)
     for i in range(num_of_agents):
@@ -89,22 +94,23 @@ def results():
     
     #determine the min and max distance between agents and which agents they are and their coordinates
     #stats[min_i, min_j, min_distance, max_i, max_j, max_distance]      
-    stats = agents[0].agent_proximity_stats(num_of_agents)
-    min_i = stats[0]
-    min_j = stats[1]
-    max_i = stats[3]
-    max_j = stats[4]
-    a = 'At the end of the model run, the agents closest together are agent \
-    {0} (x:{1}, y:{2}) \n and agent {3} (x:{4}, y:{5}). \n\
-    They are {6} units apart.\n'
-    print(a.format(str(stats[0]),str(agents[min_i].x),str(agents[min_i].y),
-                   str(stats[1]),str(agents[min_j].x),str(agents[min_j].y), str(stats[2])))
-    a = 'At the end of the model run, the agents furthest apart are agent \
-    {0} (x:{1}, y:{2}) \n and agent {3} (x:{4}, y:{5}). \n\
-    They are {6} units apart.\n'
-    print(a.format(str(stats[3]),str(agents[max_i].x),str(agents[max_i].y),
-                   str(stats[4]),str(agents[max_j].x),str(agents[max_j].y),
-                   str(stats[5]))) 
+    if num_of_agents > 1:
+        stats = agents[0].agent_proximity_stats(num_of_agents)
+        min_i = stats[0]
+        min_j = stats[1]
+        max_i = stats[3]
+        max_j = stats[4]
+        a = 'At the end of the model run, the agents closest together are '\
+        'agent {0} (x:{1}, y:{2}) \nand agent {3} (x:{4}, y:{5}). \n'\
+        'They are {6} units apart.\n'
+        print(a.format(str(stats[0]),str(agents[min_i].x),str(agents[min_i].y),
+                       str(stats[1]),str(agents[min_j].x),str(agents[min_j].y), str(stats[2])))
+        a = 'At the end of the model run, the agents furthest apart are ' \
+        'agent {0} (x:{1}, y:{2}) \nand agent {3} (x:{4}, y:{5}). \n'\
+        'They are {6} units apart.\n'
+        print(a.format(str(stats[3]),str(agents[max_i].x),str(agents[max_i].y),
+                       str(stats[4]),str(agents[max_j].x),str(agents[max_j].y),
+                       str(stats[5]))) 
         
     #create a list of agent coordinates that can be indexed after moving has 
     #taken place using the coord_lister function in the Agent class
@@ -139,6 +145,9 @@ def results():
     for i in range (num_of_agents):
         print(agents[i])
     
+    for i in range(num_of_agents):
+        print(agents[i].store)
+    #print(environment)
     print('model run complete')
 
 
@@ -165,23 +174,58 @@ agents = []
 for i in range(num_of_agents):
     agents.append(agentframework.Agent(environment, agents, rows, cols))
  
+def gen_function():
+    a = 0
+    global carry_on #Not actually needed as we're not assigning, but clearer
+    while (a < frame_num) & (carry_on) :
+        yield a			# Returns control and waits next call.
+        a = a + 1
 
 def update(frame):
-    '''Move the agents and make them eat in a new randomised order for each iteration.'''
+    '''Move the agents, then make them eat and then share with neighbours in a 
+    new randomised order (rand_order) for each iteration.'''
+    global carry_on
+    global completed_frames
+    global completed_iterations
     
-    fig.clear()
     for j in range(animation_frame_interval): 
+        
         rand_order = list(range(num_of_agents))
         random.shuffle(rand_order)
-        for i in rand_order:
-            agents[i].move(rows, cols)
+        
         for i in rand_order:
             agents[i].eat(store_capacity, consumption_rate)
         for i in rand_order:
+            agents[i].move(rows, cols, move_cost)
+        #store_stats = [min_store, max_store]
+        store_stats = agents[0].agent_store_stats(num_of_agents)
+        for i in rand_order:
             agents[i].share_with_neighbours(neighbourhood)
+        # the environment grows
+        for i in range(rows):
+            for j in range(cols):
+                environment[i][j] += env_growth_rate
+                environment[i][j] = round(environment[i][j],1)
+        # records the completed iterations and, therefore, the iteration
+        # in which the model stops due to the implemented stopping 
+        # condition.
+        completed_iterations += 1
+        # implmenting an alternative stopping condition
+        # stop if agent store becomes < 0
+        
+        # if any of the agents stores fell below 0 (they are not sustained)
+        # after moving the model will stop running.  
+        print(store_stats[0],store_stats[1])
+        if store_stats[0] < 0:
+            carry_on = False
+            print('Stopping condition implemented after', \
+                  str(completed_iterations), 'iterations because at least ' \
+                  'one agent store fell below zero')
+            results()
+            return
     #calculate extremeties (E, S, W, N) using extremes function defined in  
     #agentframework.py'''
-    
+    fig.clear()
     extremeties = agents[0].extremes(num_of_agents)
     matplotlib.pyplot.imshow(environment)
     '''work out limits of the plot axis'''
@@ -191,20 +235,20 @@ def update(frame):
         matplotlib.pyplot.scatter(agents[i].x, agents[i].y, color='black') #colour plotted points black
     for i in range(len(extremeties)):
         matplotlib.pyplot.scatter(extremeties[i][0],extremeties[i][1], color='red') #color extremeties red
-    
-    global completed_iterations
-    completed_iterations += 1
-    print(completed_iterations, ' frames complete')
-    
-    if completed_iterations == frame_num:
+        
+        
+    completed_frames += 1
+    print(completed_frames, ' frames complete')
+    if completed_frames == frame_num:
         results()
 
 def skip():
     return
 
 frame_num = int(num_of_iterations / animation_frame_interval)
-animation = matplotlib.animation.FuncAnimation(fig, update, frames = frame_num, init_func = skip, interval=250, repeat = False)
+animation = matplotlib.animation.FuncAnimation(fig, update, frames = gen_function, init_func = skip, interval=250, repeat = False)
 matplotlib.pyplot.show()
+
 
 
 

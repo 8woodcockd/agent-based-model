@@ -15,13 +15,21 @@ class Agent:
         self.environment = environment
         self.store = float(0)   # ensures all store values of type: float
         self.agents = agents
-        
+        self.cols = cols-1
+        self.rows = rows-1
+  
     def getx(self):
-        return self._x 
+        return self._x
     
     def setx(self, value):
-        self._x = value
-    
+        if isinstance(value, int) == False: 
+            print('x value must be integer')
+            return
+        if 0 <= value <= self.cols:
+            self._x = value
+        else:
+            print('x value entered is outside of the acceptable range')
+
     def delx(self):
         del self._x
     
@@ -29,7 +37,13 @@ class Agent:
         return self._y
     
     def sety(self, value):
-        self._y = value
+        if isinstance(value, int) == False: 
+            print('y value must be integer')
+            return
+        if 0 <= value <= self.rows:
+            self._y = value
+        else:
+            print('y value entered is outside of the acceptable range')
     
     def dely(self):
         del self._y
@@ -37,16 +51,22 @@ class Agent:
     x = property(getx, setx, delx, "I'm the 'x' property.")
     y = property(gety, sety, dely, "I'm the 'y' property.")
     
-    def move(self, rows, cols):
-    # change coordinates of x and y (random half chance of increasing by 1 or decreasing by 1)
-        if random.random() < 0.5:
-            self.y = (self.y + 1) % rows # using modulus to implement torus boundary
-        else:
-            self.y = (self.y - 1) % rows 
-        if random.random() < 0.5:
-            self.x = (self.x + 1) % cols
-        else:
-            self.x = (self.x - 1) % cols
+    def move(self, rows, cols, move_cost):
+    # change coordinates of x and y (equal random chance of increasing by 1,
+    # decreasing by 1 or staying the same). Moving costs store resources and 
+    # is variable (move_cost).
+        if random.random() < (1/3):
+            self.y = (self.y + 1) % (rows) # using modulus to implement torus boundary
+            self.store -= move_cost
+        elif random.random() < 0.5:
+            self.y = (self.y - 1) % (rows)
+            self.store -= move_cost
+        if random.random() < (1/3):
+            self.x = (self.x + 1) % (cols)
+            self.store -= move_cost
+        elif random.random() < 0.5:
+            self.x = (self.x - 1) % (cols)
+            self.store -= move_cost
                
     
     
@@ -88,17 +108,23 @@ class Agent:
         
         if self.environment[self.y][self.x] > consumption_rate:
             self.environment[self.y][self.x] -= consumption_rate
+            self.environment[self.y][self.x] = round(self.environment[self.y][self.x],1)
             self.store += consumption_rate
+            self.store = round(self.store,1)
+            print('self.store: ', self.store)
         else:
             self.store += self.environment[self.y][self.x]
-            self.environment[self.y][self.x] -= self.environment[self.y][self.x]
+            self.store = round(self.store,1)
+            self.environment[self.y][self.x] = float(0)
+            
         
         # Sick up store at current location if eaten more than 100 units
         # ensures all store values are floats. Division in 'share with 
         # neighbours' could create floats from integers.
         if self.store > store_capacity:
-            self.environment[self.y][self.x] += self.store 
-            self.store = float(0)   
+            sicked_up = random.randint(int(0.25*self.store),int(0.75*self.store))
+            self.environment[self.y][self.x] += sicked_up 
+            self.store -= sicked_up   
         
     def share_with_neighbours(self, neighbourhood):
         # Loop through the agents in self.agents .
@@ -121,7 +147,7 @@ class Agent:
  
     
     def agent_proximity_stats(self, num_of_agents):
-        max = 0
+        max = -math.inf
         min = math.inf
         min_i = 0
         min_j = 0
@@ -141,10 +167,21 @@ class Agent:
                         min_i = i
                         min_j = j                          
         return [min_i, min_j, min, max_i, max_j, max]
-        
+    
+    def agent_store_stats(self, num_of_agents):
+        max_store = -math.inf
+        min_store = math.inf
+        agents = self.agents
+        for i in range (num_of_agents):
+            if agents[i].store > max_store:
+                max_store = round(agents[i].store,1)
+            if agents[i].store < min_store:
+                min_store = round(agents[i].store,1)
+        return [min_store, max_store]
+    
     '''overide __str__(self) in agents to print the agent location and current store'''
     def __str__(self): 
-        return 'The agents (x,y) coordinates are (' + str(self.x) + ',' + str(self.y) + ') and the agent is storing ' + str(self.store) + ' units'
+        return 'The agents (x,y) coordinates are (' + str(self.x) + ',' + str(self.y) + ') and the agent is storing ' + str(round(self.store,1)) + ' units'
         #return str(self.x) + ', ' + str(self.y)
 
     
