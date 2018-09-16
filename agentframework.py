@@ -111,7 +111,6 @@ class Agent:
             self.environment[self.y][self.x] = round(self.environment[self.y][self.x],1)
             self.store += consumption_rate
             self.store = round(self.store,1)
-            print('self.store: ', self.store)
         else:
             self.store += self.environment[self.y][self.x]
             self.store = round(self.store,1)
