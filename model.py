@@ -10,10 +10,13 @@ the animation pops open in a new window. It will not run otherwise. '''
 #import necessary modules   to run the model
 import matplotlib.pyplot
 import matplotlib.animation
+import matplotlib.cbook
+
 import agentframework
 import csv
 import random
 import sys
+import math
 
 # Enter model variables to be used. These will be overidden by any variables 
 # entered at the command prompt if available.
@@ -27,14 +30,30 @@ num_of_iterations = 25
 animation_frame_interval = 5
 completed_frames = 0        # Do not edit
 completed_iterations = 0    # Do not edit
+max_env = 0
+min_env = 0
 carry_on = True             # Do not edit
 inputs_list = []
 
+def evironment_stats():            
+    global max_env
+    global min_env
+    max_env = -math.inf
+    min_env = math.inf
+    max_env = -math.inf
+    for i in range(rows):
+        if max(environment[i]) > max_env:
+            max_env = max(environment[i])
+        if min(environment[i]) < min_env:
+            min_env = min(environment[i])
+
 def results():
-    #plot the final results if the last frame is not showing the result of the final iteration
+    # Plot the final results if the last frame is not showing the result of 
+    # the final iteration
     if carry_on is True:
         if num_of_iterations % animation_frame_interval != 0:
-            '''Move the agents and make them eat in a new randomised order for each iteration.'''
+            #Move the agents and make them eat in a new randomised order for 
+            #each iteration.
             for j in range(num_of_iterations % animation_frame_interval):
                 rand_order = list(range(num_of_agents))
                 random.shuffle(rand_order)
@@ -44,33 +63,10 @@ def results():
                     agents[i].eat(store_capacity, consumption_rate)
                 for i in rand_order:
                     agents[i].share_with_neighbours(neighbourhood)
-            
-            #calculate extremeties (E, S, W, N) using extremes function defined in  
-    #agentframework.py'''
-    fig.clear()
-    
-    ax = fig.subplots()
-    ax.set_xlabel('distance (unspecified units)', fontsize=10)
-    ax.set_ylabel('distance (unspecified units)', fontsize=10)
-    extremeties = agents[0].extremes(num_of_agents)
-    matplotlib.pyplot.imshow(environment)
-    for i in range(num_of_agents):
-                matplotlib.pyplot.scatter(agents[i].x, agents[i].y, color='black') #colour plotted points black
-    for i in range(len(extremeties)):
-        matplotlib.pyplot.scatter(extremeties[i][0],extremeties[i][1], color='red') #color extremeties red
-    #set the limits of the plot axes
-    matplotlib.pyplot.xlim(0, cols-1)
-    matplotlib.pyplot.ylim(0, rows-1)
-    print(str(num_of_agents))
-    matplotlib.pyplot.suptitle('Agent-based model')
-    props = dict(boxstyle='round', facecolor='ghostwhite', alpha=0.5)
-    ax.text(
-            0.5, 1.07, parameters, transform=ax.transAxes, fontsize=10,
-            horizontalalignment='center',verticalalignment='top', bbox=props, 
-            wrap = True
-            )
-    #determine the min and max distance between agents and which agents they are and their coordinates
-    #stats[min_i, min_j, min_distance, max_i, max_j, max_distance]      
+    plot_scatter(max_env)       
+    # Determine the min and max distance between agents, which agents they are, 
+    # and their coordinates.
+    # stats[min_i, min_j, min_distance, max_i, max_j, max_distance]      
     if num_of_agents > 1:
         stats = agents[0].agent_proximity_stats(num_of_agents)
         min_i = stats[0]
@@ -81,21 +77,14 @@ def results():
         'agent {0} (x:{1}, y:{2}) \nand agent {3} (x:{4}, y:{5}). \n'\
         'They are {6} units apart.\n'
         print(a.format(str(stats[0]),str(agents[min_i].x),str(agents[min_i].y),
-                       str(stats[1]),str(agents[min_j].x),str(agents[min_j].y), str(stats[2])))
+                       str(stats[1]),str(agents[min_j].x),str(agents[min_j].y), 
+                       str(stats[2])))
         a = 'At the end of the model run, the agents furthest apart are ' \
         'agent {0} (x:{1}, y:{2}) \nand agent {3} (x:{4}, y:{5}). \n'\
         'They are {6} units apart.\n'
         print(a.format(str(stats[3]),str(agents[max_i].x),str(agents[max_i].y),
                        str(stats[4]),str(agents[max_j].x),str(agents[max_j].y),
                        str(stats[5]))) 
-        
-    #create a list of agent coordinates that can be indexed after moving has 
-    #taken place using the coord_lister function in the Agent class
-    agents_coordinates = []
-    for agents_row_a in agents:
-        agent_instance_coordinates = agentframework.Agent.coord_lister(agents_row_a)
-        agents_coordinates.append(agent_instance_coordinates)
-    #print('agents_coordinates list: ', agents_coordinates)
     
     #write the environment data to a file after agents have moved and eaten it
     #environment_total_new = 0
@@ -113,15 +102,17 @@ def results():
     
     #create and/or append existing file containing total eaten by all agents
     with open ("total_agent_store_out.txt", "a") as f:
-        f.write('agent(s)s: ' + str(num_of_agents) + ', number of iterations: ' + 
-                str(num_of_iterations) + ', neighbourhood radius: ' + 
-                str(neighbourhood) + ', total agent store: ' + 
-                str(total_agent_store) + '\n')   
-    
+        f.write('no. of agent(s)s: ' + str(num_of_agents) + ', store capacity: ' +  
+                str(store_capacity) + ', consumption_rate: ' + 
+                str(consumption_rate) + ', move cost: ' + str(move_cost) +
+                ', environmental growth rate: ' + str(env_growth_rate) +
+                ', number of iterations: ' + str(num_of_iterations) + 
+                ', neighbourhood radius: ' +  str(neighbourhood) + 
+                ', total agent store: ' + str(total_agent_store) + '\n')
+
     '''Print the overidden agent string.'''
     for i in range (num_of_agents):
         print(agents[i])
-    
     #print(environment)
     print('model run complete')
 
@@ -171,38 +162,55 @@ def update(frame):
                   'one agent store fell below zero')
             results()
             return
-    #calculate extremeties (E, S, W, N) using extremes function defined in  
-    #agentframework.py'''
-    fig.clear()
-    fig.suptitle('Agent-based model')
-    ax = fig.subplots()
-    ax.set_xlabel('distance (unspecified units)', fontsize=10)
-    ax.set_ylabel('distance (unspecified units)', fontsize=10)
-    props = dict(boxstyle='round', facecolor='ghostwhite', alpha=0.5)
-    ax.text(
-            0.5, 1.07, parameters, transform=ax.transAxes, fontsize=10,
-            horizontalalignment='center',verticalalignment='top', bbox=props, 
-            wrap = True
-            )
-    extremeties = agents[0].extremes(num_of_agents)
-    #show environment background data with colorbar
-    c = matplotlib.pyplot.imshow(environment)
-    cbar = fig.colorbar(c, ticks=[-1, 0, 1])
-    cbar.ax.set_yticklabels(['< -1', '0', '> 1'])
-    #set the limits of the plot axes
-    matplotlib.pyplot.xlim(0, cols-1)
-    matplotlib.pyplot.ylim(0, rows-1)
-    #colour plotted agents black
-    for i in range(num_of_agents):
-        matplotlib.pyplot.scatter(agents[i].x, agents[i].y, color='black')
-    #color extremeties red
-    for i in range(len(extremeties)):
-        matplotlib.pyplot.scatter(extremeties[i][0],extremeties[i][1], 
-                                  color='red') 
+    plot_scatter(max_env)
     completed_frames += 1
     print(completed_frames, ' frames complete')
     if completed_frames == frame_num:
         results()
+
+def plot_scatter(max_env):
+    fig.clear()
+    fig.suptitle('Agent-based model')
+    ax = fig.subplots()
+    #set the limits of the plot axes
+    matplotlib.pyplot.xlim(0, cols-1)
+    matplotlib.pyplot.ylim(0, rows-1)
+    ax.set_xlabel('distance (unspecified units)', fontsize=10)
+    ax.set_ylabel('distance (unspecified units)', fontsize=10)
+    #show environment background data with colorbar
+    c = ax.imshow(environment, vmin = 0, vmax = max_env)
+    ticks_interval = round((max_env / 10),0)
+    ticks_list =[]
+    ticks_gen = 0
+    for i in range(10):
+        ticks_list.append(ticks_gen)
+        ticks_gen += ticks_interval
+    cbar = fig.colorbar(c, ticks=ticks_list)
+    cbar.ax.set_yticklabels(ticks_list)
+    #colour plotted points black
+    for i in range(num_of_agents):
+                matplotlib.pyplot.scatter(agents[i].x, agents[i].y, 
+                                          color='black') 
+    #calculate extremeties (E, S, W, N). Function defined in agentframework.py
+    #color extremeties red
+    extremeties = agents[0].extremes(num_of_agents)
+    for i in range(len(extremeties)):
+        matplotlib.pyplot.scatter(extremeties[i][0],extremeties[i][1], 
+                                  color='red') 
+    params = 'Model Parameters:\nnum_of_agents: {0}, store_capacity: {1},\n'\
+    'consumption_rate: {2}, move_cost: {3}, neighbourhood: {4},\n'\
+    'env_growth_rate: {5}, num_of_iterations: {6},\n'\
+    'animation_frame_interval: {7}'
+    parameters = params.format(str(num_of_agents),str(store_capacity),
+             str(consumption_rate), str(move_cost), str(neighbourhood),
+             str(env_growth_rate),str(num_of_iterations),
+             str(animation_frame_interval))
+    props = dict(boxstyle='round', facecolor='ghostwhite', alpha=0.5)
+    ax.text(
+            0.1, 1.2, parameters, transform=ax.transAxes, fontsize=10,
+            horizontalalignment='left',verticalalignment='top', bbox=props, 
+            wrap = True
+            )
 
 def skip():
     return
@@ -218,7 +226,6 @@ if len(sys.argv) != 9:
     ans = False
     while ans is False:
         answer = input()
-        print(answer)
         if answer == 'y':# or 'Y' or 'yes' or 'Yes' or 'YES':   
             ans = True
             print('Please enter the following parameters separated by one '+
@@ -255,6 +262,9 @@ if len(sys.argv) != 9:
                 inputs = inputs.split(" ")
                 for i in inputs:
                     inputs_list.append(float(i))
+                # Set the custom input parameters after model has been run 
+                # from the list generated by the command line input if 
+                # condition has been met.
                 if inputs_list[6] > inputs_list[7]:
                     ans2 = True
                     num_of_agents = int(inputs_list[0])
@@ -265,14 +275,14 @@ if len(sys.argv) != 9:
                     env_growth_rate = inputs_list[5]
                     num_of_iterations = int(inputs_list[6])
                     animation_frame_interval = int(inputs_list[7]) 
-                    # set the custom input parameters after model has been run from the list 
-                    # generated by the command line input.    
+                     
                 else:
                     print(
-                      'ERROR: animation_frame_interval (',animation_frame_interval, ' ' +
-                      'entered) must be greater than num_of_iterations (',+
-                      num_of_iterations, 'entered).\nPlease revise and re-enter ' 
-                      'the model parameters.'
+                      'ERROR: animation_frame_interval (', +
+                      animation_frame_interval, ' entered) '
+                      'must be greater than num_of_iterations (', +
+                      num_of_iterations, 'entered).\nPlease revise and ' 
+                      're-enter the model parameters.'
                       )                          
         elif answer == 'n':
             ans = True
@@ -293,14 +303,14 @@ if len(sys.argv) == 9:
         'Model parameters entered:\n'\
         'num_of_agents:',num_of_agents,', store_capacity: ',store_capacity,\
         ', consumption_rate: ',consumption_rate, ', move_cost: ',move_cost,\
-        ', neighbourhood: ',neighbourhood, ', env_growth_rate: ',env_growth_rate,\
-        ', num_of_iterations: ',num_of_iterations,\
+        ', neighbourhood: ',neighbourhood, ', env_growth_rate: ',\
+        env_growth_rate, ', num_of_iterations: ',num_of_iterations,\
         ', animation_frame_interval: ',animation_frame_interval
         )
     if num_of_iterations < animation_frame_interval:
         print(
-              'ERROR: animation_frame_interval (',animation_frame_interval, ' ' +
-              'entered) must be greater than num_of_iterations (',+
+              'ERROR: animation_frame_interval (',animation_frame_interval, +
+              ' entered) must be greater than num_of_iterations (',+
               num_of_iterations, 'entered).\nPlease restart model with ' + 
               'revised parameters.'
               )
@@ -329,49 +339,26 @@ with open('in.txt', newline ='') as f:
         for value in row:
             rowlist.append(value)
         environment.append(rowlist)
-
 #calculate the number of x and y values and hence the grid area.
 rows = len(environment)
 cols = len(environment[0])
-
+#calculate min and max environment values to use when creating colourbar
+evironment_stats()
 #create the agents.
 agents = []        
 for i in range(num_of_agents):
     agents.append(agentframework.Agent(environment, agents, rows, cols))
-    
-#Create the figure and set the axes to show the animation and final results.
+
+#create the figure and plot initial environment and agent positions 
 fig = matplotlib.pyplot.figure(figsize=(9, 9))
-
-ax = fig.subplots()
-
-ax.set_xlabel('distance (unspecified units)', fontsize=10)
-ax.set_ylabel('distance (unspecified units)', fontsize=10)
-#ax = fig.add_axes([0, 0, 1, 1])
-fig.suptitle('Agent-based model')
-
-parameters = 'num_of_agents: ' + str(num_of_agents) \
-    + ', store_capacity: ' + str(store_capacity) \
-    + ', consumption_rate: ' + str(consumption_rate) \
-    + ', move_cost: ' + str(move_cost) \
-    + ', neighbourhood: ' + str(neighbourhood) \
-    + ', env_growth_rate: ' + str(env_growth_rate) \
-    + ', num_of_iterations: ' + str(num_of_iterations) \
-    + ', animation_frame_interval: ',str(animation_frame_interval)
-props = dict(boxstyle='round', facecolor='ghostwhite', alpha=0.5)
-ax.text(
-        0.5, 1.07, parameters, transform=ax.transAxes, fontsize=10,
-        horizontalalignment='center',verticalalignment='top', bbox=props, 
-        wrap = True
-        )
-matplotlib.pyplot.xlim(0, cols-1)
-matplotlib.pyplot.ylim(0, rows-1)
-matplotlib.pyplot.imshow(environment)
-
-#Create the animation.
+plot_scatter(max_env)
+#Create the animation using the update function which will call the results 
+#function when complete
 frame_num = int(num_of_iterations / animation_frame_interval)
-animation = matplotlib.animation.FuncAnimation(fig, update, frames = gen_function, init_func = skip, interval=250, repeat = False)
+animation = matplotlib.animation.FuncAnimation(fig, update, 
+                                               frames = gen_function, 
+                                               init_func = skip, interval=250, 
+                                               repeat = False)
 matplotlib.pyplot.show()
-
-
 
 

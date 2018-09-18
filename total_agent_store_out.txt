@@ -261,3 +261,96 @@ agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent st
 agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 102.0
 agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 79.0
 agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 63.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 88.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 134.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 54.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 102.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 77.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 134.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 89.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 147.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 108.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 77.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 124.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 117.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 121.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 135.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 103.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 126.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 81.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 87.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 106.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 163.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 143.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 102.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 94.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 158.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 110.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 125.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 131.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 112.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 86.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 88.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 111.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 99.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 136.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 96.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 117.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 110.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 136.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 112.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 120.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 130.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 106.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 127.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 131.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 98.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 71.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 150.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 90.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 151.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 39.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 82.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 135.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 159.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 52.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 138.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 125.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 104.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 110.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 127.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 97.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 130.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 139.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 150.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 124.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 143.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 108.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 165.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 142.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 152.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 140.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 75.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 127.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 89.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 137.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 121.0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24, number of iterations: move cost: 1225, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24, number of iterations: move cost: 12environmental growth rate: 0.125, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24, number of iterations: move cost: 12environmental growth rate: 0.125, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24, number of iterations: move cost: 12environmental growth rate: 0.125, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24move cost: 12environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24move cost: 12environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24move cost: 12environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+agent(s)s: 2store capacity: 100consumption_rate: 24move cost: 12environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+No. of agent(s)s: 2, store capacity: 100, consumption_rate: 24move cost: 12environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+No. of agent(s)s: 2, store capacity: 100, consumption_rate: 24, move cost: 12, environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+no. of agent(s)s: 2, store capacity: 100, consumption_rate: 24, move cost: 12, environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 0
+no. of agent(s)s: 2, store capacity: 100, consumption_rate: 24, move cost: 12, environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 102.0
+no. of agent(s)s: 2, store capacity: 100, consumption_rate: 24, move cost: 12, environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 158.0

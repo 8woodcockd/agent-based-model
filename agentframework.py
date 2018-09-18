@@ -77,10 +77,6 @@ class Agent:
     
     '''def distance_between(agents_row_a, agents_row_b):
     return (((agents_row_a[0] - agents_row_b[0])**2) + ((agents_row_a[1] - agents_row_b[1])**2))**0.5'''
-  
-    '''create index list of agent coordinates'''          
-    def coord_lister(agents_row_a):
-            return([agents_row_a._x, agents_row_a._y])
         
     def extremes (self, num_of_agents):
         #coordinates format [x, y]
@@ -177,7 +173,7 @@ class Agent:
             if agents[i].store < min_store:
                 min_store = round(agents[i].store,1)
         return [min_store, max_store]
-    
+
     '''overide __str__(self) in agents to print the agent location and current store'''
     def __str__(self): 
         return 'The agents (x,y) coordinates are (' + str(self.x) + ',' + str(self.y) + ') and the agent is storing ' + str(round(self.store,1)) + ' units'
