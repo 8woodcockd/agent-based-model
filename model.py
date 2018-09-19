@@ -68,7 +68,8 @@ def results():
     # and their coordinates.
     # stats[min_i, min_j, min_distance, max_i, max_j, max_distance]      
     if num_of_agents > 1:
-        stats = agents[0].agent_proximity_stats(num_of_agents)
+        stats = agents[1].agent_proximity_stats(num_of_agents)
+        print(stats)
         min_i = stats[0]
         min_j = stats[1]
         max_i = stats[3]
@@ -102,9 +103,10 @@ def results():
     
     #create and/or append existing file containing total eaten by all agents
     with open ("total_agent_store_out.txt", "a") as f:
-        f.write('no. of agent(s)s: ' + str(num_of_agents) + ', store capacity: ' +  
-                str(store_capacity) + ', consumption_rate: ' + 
-                str(consumption_rate) + ', move cost: ' + str(move_cost) +
+        f.write('no. of agent(s)s: ' + str(num_of_agents) + 
+                ', store capacity: ' + str(store_capacity) +  
+                ', consumption_rate: ' + str(consumption_rate) +
+                 ', move cost: ' + str(move_cost) +
                 ', environmental growth rate: ' + str(env_growth_rate) +
                 ', number of iterations: ' + str(num_of_iterations) + 
                 ', neighbourhood radius: ' +  str(neighbourhood) + 
@@ -113,8 +115,15 @@ def results():
     '''Print the overidden agent string.'''
     for i in range (num_of_agents):
         print(agents[i])
-    #print(environment)
+    # Save figure as an image before quiting the program creating a name from 
+    # the input variables used.
+    fig.savefig(str(num_of_agents)+ '_' + str(store_capacity) + '_' + 
+                str(consumption_rate) + '_' + str(move_cost) + '_' +
+                str(neighbourhood) + '_' + str(env_growth_rate) + '_' 
+                + str(num_of_iterations) + '_' + str(animation_frame_interval) 
+                + '.png')
     print('model run complete')
+    sys.exit()
 
 def gen_function():
     a = 0
@@ -178,15 +187,17 @@ def plot_scatter(max_env):
     ax.set_xlabel('distance (unspecified units)', fontsize=10)
     ax.set_ylabel('distance (unspecified units)', fontsize=10)
     #show environment background data with colorbar
-    c = ax.imshow(environment, vmin = 0, vmax = max_env)
+    c = ax.imshow(environment, vmin = 0, vmax = int(max_env))
     ticks_interval = round((max_env / 10),0)
     ticks_list =[]
     ticks_gen = 0
     for i in range(10):
-        ticks_list.append(ticks_gen)
+        ticks_list.append(int(ticks_gen))
         ticks_gen += ticks_interval
+    ticks_list.append(int(max_env))
     cbar = fig.colorbar(c, ticks=ticks_list)
     cbar.ax.set_yticklabels(ticks_list)
+    cbar.set_label('Environment resource level', rotation=90, labelpad=20)
     #colour plotted points black
     for i in range(num_of_agents):
                 matplotlib.pyplot.scatter(agents[i].x, agents[i].y, 
@@ -219,6 +230,7 @@ def skip():
 #default variables or enter their own variables. If the user is familiar with 
 #the program and has enter all the required system arguments the model will 
 #save time and just run.
+print(len(sys.argv))
 if len(sys.argv) != 9:
     print("Do you want to enter your own model variables (if you do not the " 
           "script defaults shall be used)?\n Please type 'y' or 'n' at the " 
@@ -360,5 +372,4 @@ animation = matplotlib.animation.FuncAnimation(fig, update,
                                                init_func = skip, interval=250, 
                                                repeat = False)
 matplotlib.pyplot.show()
-
 

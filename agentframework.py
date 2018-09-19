@@ -55,8 +55,9 @@ class Agent:
     # change coordinates of x and y (equal random chance of increasing by 1,
     # decreasing by 1 or staying the same). Moving costs store resources and 
     # is variable (move_cost).
+    # use modulus to implement torus boundary
         if random.random() < (1/3):
-            self.y = (self.y + 1) % (rows) # using modulus to implement torus boundary
+            self.y = (self.y + 1) % (rows) 
             self.store -= move_cost
         elif random.random() < 0.5:
             self.y = (self.y - 1) % (rows)
@@ -74,9 +75,6 @@ class Agent:
     def distance_between(self, agent):
         return (((self.x - agent.x)**2) + 
         ((self.y - agent.y)**2))**0.5
-    
-    '''def distance_between(agents_row_a, agents_row_b):
-    return (((agents_row_a[0] - agents_row_b[0])**2) + ((agents_row_a[1] - agents_row_b[1])**2))**0.5'''
         
     def extremes (self, num_of_agents):
         #coordinates format [x, y]
@@ -98,13 +96,15 @@ class Agent:
         return [N_agent, E_agent, S_agent, W_agent]
             
     def eat(self, store_capacity, consumption_rate):
-        '''agent will eat 10 units of the environment or as much as is available 
-        in its position. The agent will be sick if its store exceeds store_capacity 
-        it will deposit its whole store at its position in the environment'''    
+        '''agent will eat 10 units of the environment or as much as is  
+        available in its position. The agent will be sick if its store exceeds  
+        store_capacity it will deposit its whole store at its position in the 
+        environment'''    
         
         if self.environment[self.y][self.x] > consumption_rate:
             self.environment[self.y][self.x] -= consumption_rate
-            self.environment[self.y][self.x] = round(self.environment[self.y][self.x],1)
+            self.environment[self.y][self.x] = round(
+                                            self.environment[self.y][self.x],1)
             self.store += consumption_rate
             self.store = round(self.store,1)
         else:
@@ -117,7 +117,8 @@ class Agent:
         # ensures all store values are floats. Division in 'share with 
         # neighbours' could create floats from integers.
         if self.store > store_capacity:
-            sicked_up = random.randint(int(0.25*self.store),int(0.75*self.store))
+            sicked_up = random.randint(int(0.25*self.store),
+                                       int(0.75*self.store))
             self.environment[self.y][self.x] += sicked_up 
             self.store -= sicked_up   
         
@@ -127,19 +128,18 @@ class Agent:
             if agent == self:
                 continue
             else:
-                '''Calculate the distance between self and the current other agent
-                and if distance is less than or equal to the neighbourhood
-                share the sum of the two agents' stores equally between the two agents'''
+                '''Calculate the distance between self and the current other 
+                agent and if distance is less than or equal to the 
+                neighbourhood share the sum of the two agents' stores equally 
+                between the two agents'''
                 distance = self.distance_between(agent) 
                 if distance <= neighbourhood:
                     sum = self.store + agent.store
                     average = sum / 2
                     self.store = average
                     agent.store = average
-                    #print('agent ' + str(distance) + ' units away. Average store ' + str(average))
-                    # End if
-                    # End loop
- 
+                    #print('agent ' + str(distance) + ' units away. Average 
+                    #store ' + str(average))
     
     def agent_proximity_stats(self, num_of_agents):
         max = -math.inf
@@ -152,12 +152,13 @@ class Agent:
         for i in range (num_of_agents):  
             for j in range (num_of_agents):
                 if i < j:
-                    distance = (((agents[i].x - agents[j].x)**2) + ((agents[i].y - agents[j].y)**2))**0.5                  
+                    distance = (((agents[i].x - agents[j].x)**2) + 
+                                ((agents[i].y - agents[j].y)**2))**0.5                  
                     if distance > max:
                         max = distance
                         max_i = i
                         max_j = j
-                    elif distance < min: 
+                    if distance < min: 
                         min = distance
                         min_i = i
                         min_j = j                          
@@ -174,9 +175,13 @@ class Agent:
                 min_store = round(agents[i].store,1)
         return [min_store, max_store]
 
-    '''overide __str__(self) in agents to print the agent location and current store'''
+    
     def __str__(self): 
-        return 'The agents (x,y) coordinates are (' + str(self.x) + ',' + str(self.y) + ') and the agent is storing ' + str(round(self.store,1)) + ' units'
+        '''overide __str__(self) in agents to print the agent location and  
+        current store'''
+        return 'The agents (x,y) coordinates are (' + str(self.x) + ',' + \
+        str(self.y) + ') and the agent is storing ' + str(round(self.store,1))\
+        + ' units'
         #return str(self.x) + ', ' + str(self.y)
 
     
