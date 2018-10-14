@@ -194,8 +194,9 @@ class Agent:
         return [min_store, max_store]
 
     def __str__(self): 
-        '''overide __str__(self) in agents to print the agent location and  
-        current store.'''
+        """overide __str__(self) in agents to print the agent location and  
+        current store.
+        """
         return 'The agents (x,y) coordinates are (' + str(self.x) + ',' + \
         str(self.y) + ') and the agent is storing ' + str(round(self.store,1))\
         + ' units'
