@@ -34,7 +34,7 @@ num_of_iterations = [20,50]
 animation_frame_interval = num_of_iterations
 
 #save file is referred to as filename in the script
-filename = "total_agent_store_out.txt"
+filename = "Model_outputs/total_agent_store_out.txt"
 
 '''if file exists, delete it'''
 if os.path.isfile(filename):
