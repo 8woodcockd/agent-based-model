@@ -1,8 +1,0 @@
-no. of agent(s)s: 10, store capacity: 100, consumption_rate: 24, move cost: 2, environmental growth rate: 0.1, number of iterations: 20, neighbourhood radius: 1, total agent store: 652.0
-no. of agent(s)s: 10, store capacity: 100, consumption_rate: 24, move cost: 2, environmental growth rate: 0.1, number of iterations: 50, neighbourhood radius: 1, total agent store: 702.0
-no. of agent(s)s: 20, store capacity: 100, consumption_rate: 24, move cost: 2, environmental growth rate: 0.1, number of iterations: 20, neighbourhood radius: 1, total agent store: 1368.0
-no. of agent(s)s: 20, store capacity: 100, consumption_rate: 24, move cost: 2, environmental growth rate: 0.1, number of iterations: 50, neighbourhood radius: 1, total agent store: 1276.0
-no. of agent(s)s: 30, store capacity: 100, consumption_rate: 24, move cost: 2, environmental growth rate: 0.1, number of iterations: 20, neighbourhood radius: 1, total agent store: 1727.0
-no. of agent(s)s: 30, store capacity: 100, consumption_rate: 24, move cost: 2, environmental growth rate: 0.1, number of iterations: 50, neighbourhood radius: 1, total agent store: 1963.0
-no. of agent(s)s: 2, store capacity: 100, consumption_rate: 24, move cost: 12, environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 102.0
-no. of agent(s)s: 2, store capacity: 100, consumption_rate: 24, move cost: 12, environmental growth rate: 0.1, number of iterations: 25, neighbourhood radius: 10, total agent store: 120.0

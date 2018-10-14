@@ -20,7 +20,7 @@ and saved in the same diretory'''
 import subprocess
 import os
 
-'''edit the input variables for the parameter sweep'''
+# Edit the input variables for the parameter sweep.
 num_of_agents = [10,20,30]
 store_capacity = [100]
 consumption_rate = [24]
@@ -28,9 +28,9 @@ move_cost = [2]
 neighbourhood = [1]
 env_growth_rate = [0.1]
 num_of_iterations = [20,50]
-# Should remain equal to num_of_iterations if not requiring animation effect.
-# Otherwise, set to a number smaller than the smallest number of iterations
-# listed.
+# Animation_frame_interval should remain equal to num_of_iterations if not 
+# requiring animation effect. Otherwise, set to a number smaller than the 
+# smallest number of iterations listed. It is the users choice.
 animation_frame_interval = num_of_iterations
 
 #save file is referred to as filename in the script

@@ -7,26 +7,26 @@ Created on Wed Aug 22 21:06:47 2018
 '''Ensure '%matplotlib qt' has been entered at the IPython console to ensure 
 the animation pops open in a new window. It will not run otherwise. '''
 
-#import necessary modules   to run the model
+# Import necessary modules to run the model
 import matplotlib.pyplot
 import matplotlib.animation
 import matplotlib.cbook
-
 import agentframework
 import csv
 import random
 import sys
 import math
+import os
 
 # Enter model variables to be used. These will be overidden by any variables 
 # entered at the command prompt if available.
-num_of_agents = 2
+num_of_agents = 12
 store_capacity = 100
 consumption_rate = 24
 move_cost = 12
 neighbourhood = 10
 env_growth_rate = 0.1
-num_of_iterations = 25
+num_of_iterations = 200
 animation_frame_interval = 5
 completed_frames = 0        # Do not edit
 completed_iterations = 0    # Do not edit
@@ -36,6 +36,8 @@ carry_on = True             # Do not edit
 inputs_list = []
 
 def evironment_stats():            
+    """Determine the maximum and minimum values of the environment.
+    """
     global max_env
     global min_env
     max_env = -math.inf
@@ -48,6 +50,8 @@ def evironment_stats():
             min_env = min(environment[i])
 
 def results():
+    """Calculate, plot and save the final model outputs.
+    """
     # Plot the final results if the last frame is not showing the result of 
     # the final iteration
     if carry_on is True:
@@ -69,7 +73,6 @@ def results():
     # stats[min_i, min_j, min_distance, max_i, max_j, max_distance]      
     if num_of_agents > 1:
         stats = agents[1].agent_proximity_stats(num_of_agents)
-        print(stats)
         min_i = stats[0]
         min_j = stats[1]
         max_i = stats[3]
@@ -77,64 +80,70 @@ def results():
         a = '\nAt the end of the model run, the agents closest together are '\
         'agent {0} (x:{1}, y:{2}) \nand agent {3} (x:{4}, y:{5}). \n'\
         'They are {6} units apart.\n'
-        print(a.format(str(stats[0]),str(agents[min_i].x),str(agents[min_i].y),
-                       str(stats[1]),str(agents[min_j].x),str(agents[min_j].y), 
+        print(a.format(str(stats[0]), str(agents[min_i].x),
+                       str(agents[min_i].y), str(stats[1]),
+                       str(agents[min_j].x), str(agents[min_j].y), 
                        str(stats[2])))
         a = 'At the end of the model run, the agents furthest apart are ' \
         'agent {0} (x:{1}, y:{2}) \nand agent {3} (x:{4}, y:{5}). \n'\
         'They are {6} units apart.\n'
-        print(a.format(str(stats[3]),str(agents[max_i].x),str(agents[max_i].y),
-                       str(stats[4]),str(agents[max_j].x),str(agents[max_j].y),
+        print(a.format(str(stats[3]), str(agents[max_i].x),
+                       str(agents[max_i].y), str(stats[4]),
+                       str(agents[max_j].x), str(agents[max_j].y),
                        str(stats[5]))) 
     
-    #write the environment data to a file after agents have moved and eaten it
-    #environment_total_new = 0
-    with open ("environment_out.txt", "w") as f:
+    # Write the environment data to a file after agents have moved and eaten
+    # it.
+    with open ('Model_Outputs/environment_out.txt', 'w') as f:
         for line in environment:
             for value in line:
                 f.write(str(value) + " ")
-                #environment_total_new = environment_total_new + value
             f.write("\n")
     
-    #calculate total eaten by all agents
+    # Calculate total eaten by all agents.
     total_agent_store = 0
     for i in range (num_of_agents):
         total_agent_store = total_agent_store + agents[i].store
     
-    #create and/or append existing file containing total eaten by all agents
-    with open ("total_agent_store_out.txt", "a") as f:
-        f.write('no. of agent(s)s: ' + str(num_of_agents) + 
-                ', store capacity: ' + str(store_capacity) +  
-                ', consumption_rate: ' + str(consumption_rate) +
-                 ', move cost: ' + str(move_cost) +
-                ', environmental growth rate: ' + str(env_growth_rate) +
-                ', number of iterations: ' + str(num_of_iterations) + 
-                ', neighbourhood radius: ' +  str(neighbourhood) + 
-                ', total agent store: ' + str(total_agent_store) + '\n')
-
-    '''Print the overidden agent string.'''
+    # Create and/or append existing file containing total eaten by all agents.    
+    with open ('Model_Outputs/total_agent_store_out.txt', 'a') as f:
+        f.write('no. of agent(s)s: {0}, store capacity: {1}, '\
+                'consumption_rate: {2}, move cost: {3}, environmental growth '\
+                'rate: {4}, number of iterations: {5}, neighbourhood radius: '\
+                 '{6}, total agent store: {7} \n\n'.format(
+                    str(num_of_agents), str(store_capacity), 
+                    str(consumption_rate), str(move_cost), 
+                    str(env_growth_rate), str(num_of_iterations),
+                    str(neighbourhood), str(round(total_agent_store,1))))
+                         
+    # Print the overidden agent string.
     for i in range (num_of_agents):
         print(agents[i])
+    
     # Save figure as an image before quiting the program creating a name from 
     # the input variables used.
-    fig.savefig(str(num_of_agents)+ '_' + str(store_capacity) + '_' + 
-                str(consumption_rate) + '_' + str(move_cost) + '_' +
-                str(neighbourhood) + '_' + str(env_growth_rate) + '_' 
-                + str(num_of_iterations) + '_' + str(animation_frame_interval) 
-                + '.png')
-    print('model run complete')
+    fig.savefig('Model_Outputs/' + str(num_of_agents)+ '_' +
+                str(store_capacity) + '_' + str(consumption_rate) + '_' +
+                str(move_cost) + '_' + str(neighbourhood) + '_' +
+                str(env_growth_rate) + '_' + str(num_of_iterations) + '_' +
+                str(animation_frame_interval) + '.png')
+    print('Model run complete.')
     sys.exit()
 
 def gen_function():
+    """Generate the next number in the sequence of iterations if the specified
+    conditions are met.
+    """
+    global carry_on
     a = 0
-    global carry_on #Not actually needed as we're not assigning, but clearer
-    while (a < frame_num) & (carry_on) :
+    while (a < frame_num) & (carry_on):
         yield a			# Returns control and waits next call.
         a = a + 1
 
 def update(frame):
-    '''Move the agents, then make them eat and then share with neighbours in a 
-    new randomised order (rand_order) for each iteration.'''
+    """Move the agents, then make them eat and then share with neighbours in a 
+    new randomised order (rand_order) for each iteration.
+    """
     global carry_on
     global completed_frames
     global completed_iterations
@@ -146,29 +155,30 @@ def update(frame):
             agents[i].eat(store_capacity, consumption_rate)
         for i in rand_order:
             agents[i].move(rows, cols, move_cost)
-        #calculate: store_stats = [min_store, max_store]
+        # Calculate: store_stats = [min_store, max_store].
         store_stats = agents[0].agent_store_stats(num_of_agents)
         for i in rand_order:
             agents[i].share_with_neighbours(neighbourhood)
-        # the environment grows
+        # The environment grows.
         for i in range(rows):
             for j in range(cols):
                 environment[i][j] += env_growth_rate
                 environment[i][j] = round(environment[i][j],1)
-        # records the completed iterations and, therefore, the iteration
+        
+        # Implmenting an alternative stopping condition.
+        # Stop if agent store becomes < 0.
+        # If any of the agents stores fell below 0, they are not sustained by
+        # their resources and after moving the model will stop running.  
+        # Records the completed iterations and, therefore, the iteration
         # in which the model stops due to the implemented stopping 
         # condition.
+        # store_stats = [min_store, max_store]
         completed_iterations += 1
-        # Implmenting an alternative stopping condition
-        # stop if agent store becomes < 0.
-        # If any of the agents stores fell below 0 (they are not sustained)
-        # after moving the model will stop running.  
-        #store_stats = [min_store, max_store]
         if store_stats[0] < 0:
             carry_on = False
             print('Stopping condition implemented after', \
                   str(completed_iterations), 'iterations because at least ' \
-                  'one agent store fell below zero')
+                  'one agent store fell below zero.')
             results()
             return
     plot_scatter(max_env)
@@ -178,6 +188,9 @@ def update(frame):
         results()
 
 def plot_scatter(max_env):
+    """Create a scatter plot to show the agent position. Force the environment
+    to be shown using the same colorbar throughout the animation.
+    """
     fig.clear()
     fig.suptitle('Agent-based model')
     ax = fig.subplots()
@@ -186,7 +199,7 @@ def plot_scatter(max_env):
     matplotlib.pyplot.ylim(0, rows-1)
     ax.set_xlabel('distance (unspecified units)', fontsize=10)
     ax.set_ylabel('distance (unspecified units)', fontsize=10)
-    #show environment background data with colorbar
+    # Show environment background data with colorbar.
     c = ax.imshow(environment, vmin = 0, vmax = int(max_env))
     ticks_interval = round((max_env / 10),0)
     ticks_list =[]
@@ -198,12 +211,11 @@ def plot_scatter(max_env):
     cbar = fig.colorbar(c, ticks=ticks_list)
     cbar.ax.set_yticklabels(ticks_list)
     cbar.set_label('Environment resource level', rotation=90, labelpad=20)
-    #colour plotted points black
+    # Colour plotted points black.
     for i in range(num_of_agents):
-                matplotlib.pyplot.scatter(agents[i].x, agents[i].y, 
-                                          color='black') 
-    #calculate extremeties (E, S, W, N). Function defined in agentframework.py
-    #color extremeties red
+        matplotlib.pyplot.scatter(agents[i].x, agents[i].y, color='black') 
+    # Calculate extremeties (E, S, W, N). Function defined in agentframework.py
+    # Color extremeties red.
     extremeties = agents[0].extremes(num_of_agents)
     for i in range(len(extremeties)):
         matplotlib.pyplot.scatter(extremeties[i][0],extremeties[i][1], 
@@ -212,24 +224,33 @@ def plot_scatter(max_env):
     'consumption_rate: {2}, move_cost: {3}, neighbourhood: {4},\n'\
     'env_growth_rate: {5}, num_of_iterations: {6},\n'\
     'animation_frame_interval: {7}'
-    parameters = params.format(str(num_of_agents),str(store_capacity),
+    parameters = params.format(str(num_of_agents), str(store_capacity),
              str(consumption_rate), str(move_cost), str(neighbourhood),
-             str(env_growth_rate),str(num_of_iterations),
+             str(env_growth_rate), str(num_of_iterations),
              str(animation_frame_interval))
     props = dict(boxstyle='round', facecolor='ghostwhite', alpha=0.5)
     ax.text(
             0.1, 1.2, parameters, transform=ax.transAxes, fontsize=10,
-            horizontalalignment='left',verticalalignment='top', bbox=props, 
-            wrap = True
-            )
+            horizontalalignment='left', verticalalignment='top', bbox=props, 
+            wrap = True)
 
 def skip():
+    """Do nothing"""
+    # Used to 'skip' init_func in matplotlib.animation.FuncAnimation.
     return
 
-#interactive user interface allowing the user to decide if they want to use the
-#default variables or enter their own variables. If the user is familiar with 
-#the program and has enter all the required system arguments the model will 
-#save time and just run.
+
+# Get the current directory in order to place outputs in a folder in the 
+# current working directory location.
+current_directory = os.getcwd()
+output_directory = os.path.join(current_directory, r'Model_Outputs')
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
+
+# Interactive command line user interface allowing the user to decide if they 
+# want to use the default variables or enter their own variables. If the user  
+# is familiar with the program and has enter all the required system arguments
+# the model will save time and just run.
 print(len(sys.argv))
 if len(sys.argv) != 9:
     print("Do you want to enter your own model variables (if you do not the " 
@@ -238,7 +259,7 @@ if len(sys.argv) != 9:
     ans = False
     while ans is False:
         answer = input()
-        if answer == 'y':# or 'Y' or 'yes' or 'Yes' or 'YES':   
+        if answer == 'y':   
             ans = True
             print('Please enter the following parameters separated by one '+
               'space in the following format:\n'+
@@ -265,8 +286,7 @@ if len(sys.argv) != 9:
               'iterations to be skipped before a frame is generated for '+ 
               'the animation.\n\n'
               'Note: all inputs should be integer except the environmental '+
-              'growth rate which may be decimal (1 decimal place.).'
-              )
+              'growth rate which may be decimal (1 decimal place.).')
             ans2 = False
             while ans2 is False:
                 inputs_list = []
@@ -286,8 +306,7 @@ if len(sys.argv) != 9:
                     neighbourhood = int(inputs_list[4])
                     env_growth_rate = inputs_list[5]
                     num_of_iterations = int(inputs_list[6])
-                    animation_frame_interval = int(inputs_list[7]) 
-                     
+                    animation_frame_interval = int(inputs_list[7])   
                 else:
                     print(
                       'ERROR: animation_frame_interval (', +
@@ -301,7 +320,7 @@ if len(sys.argv) != 9:
         else:
             print("Try again. Type 'y' or 'n' and press enter")
 # Arguments entered via the command line will overide the script defaults 
-# and be used if available
+# and be used if available.
 if len(sys.argv) == 9:    
     num_of_agents = int(sys.argv[1])
     store_capacity = int(sys.argv[2])
@@ -313,59 +332,55 @@ if len(sys.argv) == 9:
     animation_frame_interval = int(sys.argv[8])    
     print(
         'Model parameters entered:\n'\
-        'num_of_agents:',num_of_agents,', store_capacity: ',store_capacity,\
-        ', consumption_rate: ',consumption_rate, ', move_cost: ',move_cost,\
-        ', neighbourhood: ',neighbourhood, ', env_growth_rate: ',\
-        env_growth_rate, ', num_of_iterations: ',num_of_iterations,\
-        ', animation_frame_interval: ',animation_frame_interval
-        )
+        'num_of_agents:', num_of_agents, ', store_capacity: ', store_capacity,\
+        ', consumption_rate: ', consumption_rate, ', move_cost: ', move_cost,\
+        ', neighbourhood: ', neighbourhood, ', env_growth_rate: ', \
+        env_growth_rate, ', num_of_iterations: ',num_of_iterations, \
+        ', animation_frame_interval: ', animation_frame_interval)
     if num_of_iterations < animation_frame_interval:
-        print(
-              'ERROR: animation_frame_interval (',animation_frame_interval, +
+        print('ERROR: animation_frame_interval (',animation_frame_interval, +
               ' entered) must be greater than num_of_iterations (',+
               num_of_iterations, 'entered).\nPlease restart model with ' + 
-              'revised parameters.'
-              )
+              'revised parameters.')
         sys.exit()
-# If no arguments are entered via the command line the script defaults are used
+# If no arguments are entered via the command line the script defaults are 
+# used.
 elif len(sys.argv) == 1:
     if(len(inputs_list) == 0):
         print('default variables values obtained from spyder script')
-# If some, but not all, arguments are entered via the command line
+# If some, but not all, arguments are entered via the command line.
 elif 1 < len(sys.argv) < 9:
-    print(
-          'ERROR: not enough arguments entered. \n' +
+    print('ERROR: not enough arguments entered. \n' +
           'len sys.argv is', len(sys.argv), 'but should be 9 \n' +
           'Please enter: python model.py {num_of_agents} ' + 
           '{store_capacity} {consumption_rate} {move_cost} {neighbourhood} ' + 
-          '{env_growth_rate} {num_of_iterations} {animation_frame_interval}'
-          )
+          '{env_growth_rate} {num_of_iterations} {animation_frame_interval}')
     sys.exit()
 
-#load the environment.
+# Load the environment.
 environment = []
-with open('in.txt', newline ='') as f:
+with open('Model_Inputs/env_in.txt', newline ='') as f:
     reader = csv.reader(f, quoting=csv.QUOTE_NONNUMERIC)
     for row in reader: 
         rowlist = []
         for value in row:
             rowlist.append(value)
         environment.append(rowlist)
-#calculate the number of x and y values and hence the grid area.
+# Calculate the number of x and y values and hence the grid area.
 rows = len(environment)
 cols = len(environment[0])
-#calculate min and max environment values to use when creating colourbar
+# Calculate min and max environment values to use when creating the colorbar.
 evironment_stats()
-#create the agents.
+# Create the agents.
 agents = []        
 for i in range(num_of_agents):
     agents.append(agentframework.Agent(environment, agents, rows, cols))
 
-#create the figure and plot initial environment and agent positions 
+# Create the figure and plot initial environment and agent positions. 
 fig = matplotlib.pyplot.figure(figsize=(9, 9))
 plot_scatter(max_env)
-#Create the animation using the update function which will call the results 
-#function when complete
+# Create the animation using the update function which will call the results 
+# function when complete.
 frame_num = int(num_of_iterations / animation_frame_interval)
 animation = matplotlib.animation.FuncAnimation(fig, update, 
                                                frames = gen_function, 
